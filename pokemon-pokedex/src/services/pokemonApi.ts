@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Pokemon, PokemonApiResponse } from "../types/pokemon";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://search-engine-for-pokemon.onrender.com/api/",
   timeout: 10000,
 });
 
@@ -29,56 +29,56 @@ const normalizePokemonResponse = (payload: unknown): Pokemon => {
 
   const types = Array.isArray(payload.types)
     ? payload.types
-        .map((entry) => {
-          if (typeof entry === "string") return entry;
-          if (
-            isRecord(entry) &&
-            isRecord(entry.type) &&
-            typeof entry.type.name === "string"
-          ) {
-            return entry.type.name;
-          }
-          return null;
-        })
-        .filter((value): value is string => value !== null)
+      .map((entry) => {
+        if (typeof entry === "string") return entry;
+        if (
+          isRecord(entry) &&
+          isRecord(entry.type) &&
+          typeof entry.type.name === "string"
+        ) {
+          return entry.type.name;
+        }
+        return null;
+      })
+      .filter((value): value is string => value !== null)
     : [];
 
   const abilities = Array.isArray(payload.abilities)
     ? payload.abilities
-        .map((entry) => {
-          if (typeof entry === "string") return entry;
-          if (
-            isRecord(entry) &&
-            isRecord(entry.ability) &&
-            typeof entry.ability.name === "string"
-          ) {
-            return entry.ability.name;
-          }
-          return null;
-        })
-        .filter((value): value is string => value !== null)
+      .map((entry) => {
+        if (typeof entry === "string") return entry;
+        if (
+          isRecord(entry) &&
+          isRecord(entry.ability) &&
+          typeof entry.ability.name === "string"
+        ) {
+          return entry.ability.name;
+        }
+        return null;
+      })
+      .filter((value): value is string => value !== null)
     : [];
 
   const stats = Array.isArray(payload.stats)
     ? payload.stats
-        .map((entry) => {
-          if (!isRecord(entry)) return null;
+      .map((entry) => {
+        if (!isRecord(entry)) return null;
 
-          if (typeof entry.name === "string" && typeof entry.value === "number") {
-            return { name: entry.name, value: entry.value };
-          }
+        if (typeof entry.name === "string" && typeof entry.value === "number") {
+          return { name: entry.name, value: entry.value };
+        }
 
-          if (
-            isRecord(entry.stat) &&
-            typeof entry.stat.name === "string" &&
-            typeof entry.base_stat === "number"
-          ) {
-            return { name: entry.stat.name, value: entry.base_stat };
-          }
+        if (
+          isRecord(entry.stat) &&
+          typeof entry.stat.name === "string" &&
+          typeof entry.base_stat === "number"
+        ) {
+          return { name: entry.stat.name, value: entry.base_stat };
+        }
 
-          return null;
-        })
-        .filter((value): value is Pokemon["stats"][number] => value !== null)
+        return null;
+      })
+      .filter((value): value is Pokemon["stats"][number] => value !== null)
     : [];
 
   return {
